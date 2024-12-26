@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Widget</class>
- <widget class="QWidget" name="Widget">
+ <class>MainWidget</class>
+ <widget class="QWidget" name="MainWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>350</height>
+    <width>800</width>
+    <height>776</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Now</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -30,7 +33,7 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QWidget" name="widget_3" native="true">
+    <widget class="QWidget" name="VLayMain" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
@@ -38,10 +41,10 @@
       </sizepolicy>
      </property>
      <property name="styleSheet">
-      <string notr="true">QWidget#widget_3
+      <string notr="true">QWidget#VLayMain
 {
-	background-color: rgba(0,0,0,100);
-     border-radius: 10px;
+background-color: rgba(0,0,0,0.5);
+border-radius: 20px;
 }</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -58,12 +61,18 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QWidget" name="widget_2" native="true">
+       <widget class="QWidget" name="HLayTitle" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
         </property>
         <property name="styleSheet">
          <string notr="true">.QWidget, QPushButton
@@ -104,15 +113,17 @@
          </item>
          <item>
           <widget class="QPushButton" name="btnFull">
-           <property name="text">
-            <string>Fullscreen</string>
+           <property name="icon">
+            <iconset resource="resource.qrc">
+             <normaloff>:/resource/Full.svg</normaloff>:/resource/Full.svg</iconset>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="btnClose">
-           <property name="text">
-            <string>Close</string>
+           <property name="icon">
+            <iconset resource="resource.qrc">
+             <normaloff>:/resource/Close.svg</normaloff>:/resource/Close.svg</iconset>
            </property>
           </widget>
          </item>
@@ -120,39 +131,16 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget_4" native="true">
-        <property name="styleSheet">
-         <string notr="true">QPushButton
-{
-	background-color: rgba(255,255,255,100);
-     border: 2px groove gray;
-     border-radius: 10px;
-}</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
+       <widget class="QWidget" name="HLayTime" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>100</width>
+             <width>283</width>
              <height>20</height>
             </size>
            </property>
@@ -183,12 +171,9 @@
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>100</width>
+             <width>40</width>
              <height>20</height>
             </size>
            </property>
@@ -198,7 +183,13 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="VLayDateTime" native="true">
+        <property name="styleSheet">
+         <string notr="true">QWidget
+{
+color: rgb(255, 255, 255);
+}</string>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <property name="leftMargin">
           <number>0</number>
@@ -217,6 +208,9 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::MinimumExpanding</enum>
+           </property>
            <property name="sizeHint" stdset="0">
             <size>
              <width>20</width>
@@ -227,40 +221,16 @@
          </item>
          <item>
           <widget class="QLabel" name="labTime">
-           <property name="palette">
-            <palette>
-             <active>
-              <colorrole role="WindowText">
-               <brush brushstyle="SolidPattern">
-                <color alpha="255">
-                 <red>255</red>
-                 <green>255</green>
-                 <blue>255</blue>
-                </color>
-               </brush>
-              </colorrole>
-             </active>
-             <inactive>
-              <colorrole role="WindowText">
-               <brush brushstyle="SolidPattern">
-                <color alpha="255">
-                 <red>255</red>
-                 <green>255</green>
-                 <blue>255</blue>
-                </color>
-               </brush>
-              </colorrole>
-             </inactive>
-             <disabled/>
-            </palette>
-           </property>
            <property name="font">
             <font>
-             <family>Comic Sans MS</family>
-             <pointsize>80</pointsize>
-             <italic>false</italic>
-             <bold>false</bold>
+             <family>Arial</family>
+             <pointsize>100</pointsize>
+             <bold>true</bold>
+             <stylestrategy>PreferAntialias</stylestrategy>
             </font>
+           </property>
+           <property name="locale">
+            <locale language="English" country="UnitedStates"/>
            </property>
            <property name="text">
             <string notr="true">00:00:00</string>
@@ -272,38 +242,16 @@
          </item>
          <item>
           <widget class="QLabel" name="labDate">
-           <property name="palette">
-            <palette>
-             <active>
-              <colorrole role="WindowText">
-               <brush brushstyle="SolidPattern">
-                <color alpha="255">
-                 <red>255</red>
-                 <green>255</green>
-                 <blue>255</blue>
-                </color>
-               </brush>
-              </colorrole>
-             </active>
-             <inactive>
-              <colorrole role="WindowText">
-               <brush brushstyle="SolidPattern">
-                <color alpha="255">
-                 <red>255</red>
-                 <green>255</green>
-                 <blue>255</blue>
-                </color>
-               </brush>
-              </colorrole>
-             </inactive>
-             <disabled/>
-            </palette>
-           </property>
            <property name="font">
             <font>
-             <family>Comic Sans MS</family>
-             <pointsize>40</pointsize>
+             <family>Arial</family>
+             <pointsize>70</pointsize>
+             <bold>true</bold>
+             <stylestrategy>PreferAntialias</stylestrategy>
             </font>
+           </property>
+           <property name="locale">
+            <locale language="English" country="UnitedStates"/>
            </property>
            <property name="text">
             <string notr="true">0000.00.00</string>
@@ -314,9 +262,62 @@
           </widget>
          </item>
          <item>
+          <widget class="QLCDNumber" name="lcdTime">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>160</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="smallDecimalPoint">
+            <bool>true</bool>
+           </property>
+           <property name="digitCount">
+            <number>8</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="intValue" stdset="0">
+            <number>12345678</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLCDNumber" name="lcdDate">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>110</height>
+            </size>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="smallDecimalPoint">
+            <bool>false</bool>
+           </property>
+           <property name="digitCount">
+            <number>10</number>
+           </property>
+           <property name="segmentStyle">
+            <enum>QLCDNumber::Flat</enum>
+           </property>
+           <property name="intValue" stdset="0">
+            <number>1234567890</number>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="verticalSpacer_2">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::MinimumExpanding</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -329,17 +330,113 @@
         </layout>
        </widget>
       </item>
+      <item>
+       <widget class="QWidget" name="HLayStyle" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+	background-color: rgba(255,255,255,100);
+     border: 2px groove gray;
+     border-radius: 10px;
+}</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="btnNormal">
+           <property name="text">
+            <string>Normal Style</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoRepeat">
+            <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnLCD">
+           <property name="text">
+            <string>LCD Style</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoRepeat">
+            <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnDial">
+           <property name="text">
+            <string>Dial Style</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="autoRepeat">
+            <bool>false</bool>
+           </property>
+           <property name="autoExclusive">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
   </layout>
+  <action name="actLaunch">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+   </property>
+   <property name="text">
+    <string>Auto Launch</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::TextHeuristicRole</enum>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btnClose</sender>
    <signal>clicked()</signal>
-   <receiver>Widget</receiver>
+   <receiver>MainWidget</receiver>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
