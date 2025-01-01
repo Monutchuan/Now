@@ -1,36 +1,37 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef MAINWIDGET_H
+#define MAINWIDGET_H
 
 #include <QWidget>
+#include <QSettings>
+#include <QtMath>
 #include <QTimer>
+#include <QPainter>
 #include <QMouseEvent>
-#include "tlcdcurrenttime.h"
-#include "tlcdcurrentdate.h"
+#include <QMenu>
 
-//用于网络授时
+//用于网络授时qwe
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
-class Widget;
+class MainWidget;
 }
 QT_END_NAMESPACE
 
-class Widget : public QWidget
+class MainWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    Widget(QWidget *parent = nullptr);
-    ~Widget();
+    MainWidget(QWidget *parent = nullptr);
+    ~MainWidget();
 
 private:
-    Ui::Widget *ui;
+    Ui::MainWidget *ui;
+    QSettings settings;
     QTimer *displayTimer, *refreshTimer;
-    TLCDCurrentTime *lcdTime;
-    TLCDCurrentDate *lcdDate;
     QTime time;
     QDate date;
 
@@ -43,6 +44,9 @@ private slots:
     void do_btnFull_clicked();
     void do_btnLocal_clicked();
     void do_btnInternet_clicked();
+    void do_btnNormal_clicked();
+    void do_btnLCD_clicked();
+    void do_btnDial_clicked();
     void do_displayTimer_timeout();
     void do_refreshTimer_timeout();
 
@@ -53,5 +57,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
     void keyPressEvent(QKeyEvent *event);
+    void paintEvent(QPaintEvent *event);
 };
-#endif // WIDGET_H
+#endif // MAINMainWidget_H
