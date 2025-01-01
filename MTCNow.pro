@@ -1,11 +1,15 @@
 QT       += core gui network
 
+RC_ICONS = icon.ico
+
+win32{ LIBS += -luser32 }
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
 
-TRANSLATIONS  =MTC_Now_en.ts\
-              MTC_Now_zh-CN.ts
+TRANSLATIONS = translation/MTC_Now_zh_CN.ts\
+               translation/MTC_Now_zh_TW.ts
 
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -13,19 +17,13 @@ TRANSLATIONS  =MTC_Now_en.ts\
 
 SOURCES += \
     main.cpp \
-    tlcdcurrentdate.cpp \
-    tlcdcurrenttime.cpp \
-    widget.cpp
+    mainwidget.cpp
 
 HEADERS += \
-    tlcdcurrentdate.h \
-    tlcdcurrenttime.h \
-    widget.h
+    mainwidget.h
 
 FORMS += \
-    tlcdcurrentdate.ui \
-    tlcdcurrenttime.ui \
-    widget.ui
+    mainwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
