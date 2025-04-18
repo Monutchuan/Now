@@ -1,5 +1,7 @@
 QT       += core gui network
 
+VERSION = 1.0.0
+
 RC_ICONS = icon.ico
 
 win32{ LIBS += -luser32 }
@@ -17,13 +19,13 @@ TRANSLATIONS = translation/MTC_Now_zh_CN.ts\
 
 SOURCES += \
     main.cpp \
-    mainwidget.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    mainwidget.h
+    mainwindow.h
 
 FORMS += \
-    mainwidget.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
