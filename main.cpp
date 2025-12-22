@@ -1,76 +1,143 @@
-#include "mainwidget.h"
+#include "mainwindow.h"
 
 #include <QApplication>
-#include <QSharedMemory>
 #include <QSettings>
 #include <QTranslator>
 #include <QLocale>
 #include <QSplashScreen>
+#include <QSharedMemory>
+#include <QSystemSemaphore>
 
-QTranslator translator;
-QSettings settings;
-
-#ifdef Q_OS_WINDOWS
+#ifdef Q_OS_WIN
 #include <windows.h>
-#endif
 
-// 激活窗口的跨平台方法
-void activateWindowByHandle(qintptr windowHandle)
+struct SharedData
 {
-#ifdef Q_OS_WINDOWS
-    // 在 Windows 上，通过窗口句柄激活窗口
-    HWND hwnd = reinterpret_cast<HWND>(windowHandle);
-    if (hwnd) {
-        SetForegroundWindow(hwnd);
-        ShowWindow(hwnd, SW_RESTORE); // 确保窗口从最小化状态恢复
-    }
-#else
-    // 在其他平台，可以使用相应的窗口管理器接口（如 X11 或 Wayland）
-    Q_UNUSED(windowHandle);
+    DWORD processId;
+    HWND windowHandle;
+};
+
+#elif defined(Q_OS_LINUX)
+#include <X11/Xlib.h>
+typedef Window SharedData;
+#elif defined(Q_OS_MACOS)
+#include <AppKit/AppKit.h>
+typedef pid_t SharedData;
 #endif
-}
 
 int main(int argc, char *argv[])
 {
+    QSystemSemaphore semaphore("MTC_Now_Semaphore", 1, QSystemSemaphore::Open);
+    semaphore.acquire();
+
+    QSharedMemory instanceCheck("MTC_Now_Instance_Check");
+    bool isRunning = false;
+
+    if (!instanceCheck.create(1))
+    {
+        if (instanceCheck.attach())
+        {
+            instanceCheck.detach();
+            if (!instanceCheck.create(1))
+                isRunning = true;
+        }
+        else
+            isRunning = true;
+    }
+
+    if (isRunning)
+    {
+        QSharedMemory windowHandleMem("MTC_Now_Window_Handle");
+        if (windowHandleMem.attach(QSharedMemory::ReadOnly))
+        {
+            windowHandleMem.lock();
+            SharedData data;
+            memcpy(&data, windowHandleMem.constData(), sizeof(SharedData));
+
+#ifdef Q_OS_WIN
+            if (IsWindow(data.windowHandle))
+            {
+                AllowSetForegroundWindow(data.processId);
+                ShowWindow(data.windowHandle, SW_RESTORE);
+                SetForegroundWindow(data.windowHandle);
+            }
+#elif defined(Q_OS_LINUX)
+            Display* display = XOpenDisplay(nullptr);
+            if (display && data)
+            {
+                XRaiseWindow(display, data);
+                XSetInputFocus(display, data, RevertToParent, CurrentTime);
+                XFlush(display);
+                XCloseDisplay(display);
+            }
+#elif defined(Q_OS_MACOS)
+            NSRunningApplication* app = [NSRunningApplication runningApplicationWithProcessIdentifier:data];
+            [app activateWithOptions:NSApplicationActivateIgnoringOtherApps];
+#endif
+            windowHandleMem.unlock();
+            windowHandleMem.detach();
+        }
+        semaphore.release();
+        return 0;
+    }
+
+    semaphore.release();
+
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    qputenv("QT_AUTO_SCREEN_SCALE_FACTOR", "1");
+
     QApplication a(argc, argv);
     QApplication::setOrganizationName("MTC");
     QApplication::setApplicationName("Now");
 
-    const QString sharedMemoryKey = "MyUniqueAppKey";
-    QSharedMemory sharedMemory(sharedMemoryKey);
-
-    if (!sharedMemory.create(sizeof(qintptr))) {
-        // 如果共享内存已存在，读取窗口句柄
-        if (sharedMemory.attach()) {
-            sharedMemory.lock();
-            qintptr windowHandle;
-            memcpy(&windowHandle, sharedMemory.constData(), sizeof(qintptr));
-            sharedMemory.unlock();
-
-            // 激活已有实例窗口
-            activateWindowByHandle(windowHandle);
-        }
-        return 0; // 退出新实例
-    }
-
+    //翻译
     bool success = false;
     QLocale locale = QLocale::system();
+    QSettings settings;
     QString language = settings.value("Language", locale.name()).toString();
+    
+    //如果语言为空字符串，表示使用系统默认语言
+    if(language.isEmpty())
+        language = locale.name();
+    
     QString file = QString(":/translation/MTC_Now_%1.qm").arg(language);
+    QTranslator translator;
     success = translator.load(file);
-    if(success) a.installTranslator(&translator);
 
+    if(success)
+        a.installTranslator(&translator);
+
+    //启动界面
     QSplashScreen splash(QPixmap(":/resource/splash.png"));
+    splash.setFont(QFont("Arial", 18, QFont::Bold));
+    splash.showMessage("Now V1.0.0\nCopyright MTC(TEAM) All Rights Reserved", Qt::AlignCenter|Qt::AlignBottom, Qt::black);
     splash.show();
-    a.processEvents();
-    MainWidget w;
+
+    MainWindow w;
     w.show();
+
+    semaphore.acquire();
+    QSharedMemory windowHandleMem("MTC_Now_Window_Handle");
+    if (windowHandleMem.create(sizeof(SharedData)))
+    {
+        windowHandleMem.lock();
+        SharedData data;
+
+#ifdef Q_OS_WIN
+        data.processId = GetCurrentProcessId();
+        data.windowHandle = (HWND)w.winId();
+#elif defined(Q_OS_LINUX)
+        data = w.winId();
+#elif defined(Q_OS_MACOS)
+        data = getpid();
+#endif
+
+        memcpy(windowHandleMem.data(), &data, sizeof(SharedData));
+        windowHandleMem.unlock();
+    }
+    semaphore.release();
+
     splash.finish(&w);
     return a.exec();
-
-    // 将窗口句柄写入共享内存
-    void* windowHandle = reinterpret_cast<void*>(w.winId());
-    sharedMemory.lock();
-    memcpy(sharedMemory.data(), &windowHandle, sizeof(qintptr));
-    sharedMemory.unlock();
 }

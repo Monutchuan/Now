@@ -1,5 +1,7 @@
 QT       += core gui network
 
+VERSION = 1.0.0
+
 RC_ICONS = icon.ico
 
 win32{ LIBS += -luser32 }
@@ -16,14 +18,23 @@ TRANSLATIONS = translation/MTC_Now_zh_CN.ts\
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    languagedialog.cpp \
     main.cpp \
-    mainwidget.cpp
+    mainwindow.cpp \
+    ntpdialog.cpp \
+    serverdialog.cpp
 
 HEADERS += \
-    mainwidget.h
+    languagedialog.h \
+    mainwindow.h \
+    ntpdialog.h \
+    serverdialog.h
 
 FORMS += \
-    mainwidget.ui
+    languagedialog.ui \
+    mainwindow.ui \
+    ntpdialog.ui \
+    serverdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

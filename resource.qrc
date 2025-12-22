@@ -1,1 +1,10 @@
-<RCC/>
+<RCC>
+    <qresource prefix="/">
+        <file>icon.ico</file>
+        <file>resource/close.svg</file>
+        <file>resource/full.svg</file>
+        <file>resource/splash.png</file>
+        <file>translation/MTC_Now_zh_CN.qm</file>
+        <file>translation/MTC_Now_zh_TW.qm</file>
+    </qresource>
+</RCC>
