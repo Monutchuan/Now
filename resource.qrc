@@ -5,6 +5,6 @@
         <file>resource/full.svg</file>
         <file>resource/splash.png</file>
         <file>translation/MTC_Now_zh_CN.qm</file>
+        <file>translation/MTC_Now_zh_TW.qm</file>
     </qresource>
-    <qresource prefix="/translations"/>
 </RCC>

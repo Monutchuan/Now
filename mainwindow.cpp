@@ -51,7 +51,17 @@ MainWindow::MainWindow(QWidget *parent)
     QSettings launch("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
     ui->actLaunch->setChecked(launch.contains(qAppName()));
 
+    ui->actBell->setChecked(settings.value("Bell", false).toBool());
+
     menu->addAction(ui->actLaunch);
+    menu->addSeparator();
+    menu->addAction(ui->actRefresh);
+    menu->addAction(ui->actServer);
+    menu->addSeparator();
+    menu->addAction(ui->actBell);
+    menu->addSeparator();
+    menu->addAction(ui->actLanguage);
+    menu->addAction(ui->actAbout);
     ui->btnMenu->setMenu(menu);
 }
 
@@ -64,7 +74,7 @@ void MainWindow::fetchInternetTime()
 {
     QUdpSocket* udpSocket = new QUdpSocket(this);
     QByteArray request(48, 0);
-    request[0] = 0x1B; //NTP 请求头
+    request[0] = 0x1B; //NTP请求头
 
     QString ntpServer = "time.windows.com";
     int ntpPort = 123;
@@ -153,7 +163,7 @@ void MainWindow::do_displayTimer_timeout()
 void MainWindow::do_refreshTimer_timeout()
 {
     //刷新计时器
-    displayTimer->setInterval(1);
+    refreshTimer->setInterval(1000);
 
     if(ui->btnLocal->isEnabled())
     {
@@ -415,7 +425,7 @@ void MainWindow::on_btnLocal_clicked()
 void MainWindow::on_btnInternet_clicked()
 {
     fetchInternetTime();
-    refreshTimer->start(600000); //十分钟
+    refreshTimer->start(20); //十分钟
     settings.setValue("UseInternetTime", true);
 }
 
@@ -466,3 +476,38 @@ void MainWindow::on_btnFull_clicked()
         update();
     }
 }
+
+void MainWindow::on_actRefresh_triggered()
+{
+    if(!ui->btnInternet->isChecked())
+        QMessageBox::critical(this, tr("Critical"), tr("Only for Internet mode!"));
+    else
+        fetchInternetTime();
+}
+
+
+void MainWindow::on_actServer_triggered()
+{
+    serverDialog = new ServerDialog(this);
+    serverDialog->show();
+}
+
+
+void MainWindow::on_actBell_triggered(bool checked)
+{
+    settings.setValue("Bell", checked);
+}
+
+
+void MainWindow::on_actLanguage_triggered()
+{
+    languageDialog = new LanguageDialog(this);
+    languageDialog->show();
+}
+
+
+void MainWindow::on_actAbout_triggered()
+{
+    QMessageBox::about(this, tr("About"), tr("MTC Now\n"));
+}
+

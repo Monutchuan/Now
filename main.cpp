@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 
 #include <QApplication>
 #include <QSettings>
@@ -96,10 +96,17 @@ int main(int argc, char *argv[])
     QLocale locale = QLocale::system();
     QSettings settings;
     QString language = settings.value("Language", locale.name()).toString();
+    
+    //如果语言为空字符串，表示使用系统默认语言
+    if(language.isEmpty())
+        language = locale.name();
+    
     QString file = QString(":/translation/MTC_Now_%1.qm").arg(language);
     QTranslator translator;
     success = translator.load(file);
-    if (success) a.installTranslator(&translator);
+
+    if(success)
+        a.installTranslator(&translator);
 
     //启动界面
     QSplashScreen splash(QPixmap(":/resource/splash.png"));

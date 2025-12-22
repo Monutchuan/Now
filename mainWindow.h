@@ -1,6 +1,9 @@
 ﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "serverdialog.h"
+#include "languagedialog.h"
+
 #include <QWidget>
 #include <QSettings>
 #include <QtMath>
@@ -17,7 +20,8 @@
 
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 QT_END_NAMESPACE
@@ -50,8 +54,20 @@ private slots:
 
     void on_btnFull_clicked();
 
+    void on_actRefresh_triggered();
+
+    void on_actServer_triggered();
+
+    void on_actBell_triggered(bool checked);
+
+    void on_actLanguage_triggered();
+
+    void on_actAbout_triggered();
+
 private:
     Ui::MainWindow *ui;
+    ServerDialog *serverDialog;
+    LanguageDialog *languageDialog;
     QSettings settings;
     QTimer *displayTimer, *refreshTimer;
 
